@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.env
+.venv/
+.pytest_cache/
+image_hub.db
+data/

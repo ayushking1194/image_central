@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="card">
+    <div class="actions" style="justify-content: space-between; margin-bottom: 16px;">
+      <h2>Prism Central Instances</h2>
+      <a class="btn" href="/ui/pcs/new">Add PC</a>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>API URL</th>
+          <th>Status</th>
+          <th>Created</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for pc in pcs %}
+        <tr>
+          <td>{{ pc.name }}</td>
+          <td>{{ pc.api_url }}</td>
+          <td>
+            {% if pc.connected %}
+              <span class="badge success">Connected</span>
+            {% else %}
+              <span class="badge neutral">Not checked</span>
+            {% endif %}
+          </td>
+          <td>{{ pc.created_at }}</td>
+          <td>
+            <form action="/ui/pcs/{{ pc.id }}/delete" method="post">
+              <button class="btn danger" type="submit">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="5">No Prism Central instances registered.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

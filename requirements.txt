@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+sqlalchemy
+pydantic
+pydantic-settings
+python-multipart
+httpx
+boto3
+celery
+redis
+pytest
+pytest-asyncio
+jinja2

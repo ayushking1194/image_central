@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="card">
+    <h2>{{ image.name }} ({{ image.version }})</h2>
+    <p><strong>Source:</strong> {{ image.source or "n/a" }}</p>
+    <p><strong>SHA256:</strong> {{ image.sha256 }}</p>
+    <p><strong>Storage URI:</strong> {{ image.storage_uri }}</p>
+    <p><strong>Created:</strong> {{ image.created_at }}</p>
+    <p>
+      <strong>Status:</strong>
+      {% if image.approved %}
+        <span class="status-approved">Approved</span>
+      {% else %}
+        <span class="status-pending">Pending</span>
+      {% endif %}
+    </p>
+    <div class="actions">
+      {% if not image.approved %}
+      <form action="/ui/images/{{ image.id }}/approve" method="post">
+        <button class="btn" type="submit">Approve</button>
+      </form>
+      {% endif %}
+      <form action="/ui/images/{{ image.id }}/publish" method="post">
+        <button class="btn secondary" type="submit">Publish</button>
+      </form>
+      <a class="btn secondary" href="/ui/images">Back</a>
+    </div>
+  </div>
+{% endblock %}

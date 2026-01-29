@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ "Image Central" }}</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <header>
+      <nav class="nav">
+        <div class="nav-brand">
+          <img
+            class="logo"
+            src="/assets/logo-3fa73aea-94d7-4d41-af69-77cb60c393ab.png"
+            alt="Image Central logo"
+          />
+          <span>Image Central</span>
+        </div>
+        <div class="nav-links">
+          <a href="/ui/images">Images</a>
+          <a href="/ui/images/upload">Upload</a>
+          <a href="/ui/pcs">Prism Centrals</a>
+          <a href="/ui/sync-jobs">Sync Jobs</a>
+          <button class="btn ghost" id="theme-toggle" type="button">
+            Theme
+          </button>
+        </div>
+      </nav>
+    </header>
+    <main>
+      {% if message %}
+      <div class="flash">{{ message }}</div>
+      {% endif %}
+      {% block content %}{% endblock %}
+    </main>
+    <script>
+      const stored = localStorage.getItem("theme");
+      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      const initial = stored || (prefersDark ? "dark" : "light");
+      document.documentElement.dataset.theme = initial;
+      const toggle = document.getElementById("theme-toggle");
+      toggle?.addEventListener("click", () => {
+        const current = document.documentElement.dataset.theme;
+        const next = current === "dark" ? "light" : "dark";
+        document.documentElement.dataset.theme = next;
+        localStorage.setItem("theme", next);
+      });
+    </script>
+  </body>
+</html>

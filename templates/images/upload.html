@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="card">
+    <h2>Upload Image</h2>
+    <form action="/ui/images/upload" method="post" enctype="multipart/form-data">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input id="name" name="name" type="text" required />
+      </div>
+      <div class="form-group">
+        <label for="version">Version</label>
+        <input id="version" name="version" type="text" required />
+      </div>
+      <div class="form-group">
+        <label for="source">Source</label>
+        <input id="source" name="source" type="text" />
+      </div>
+      <div class="form-group">
+        <label for="file">Image File</label>
+        <input id="file" name="file" type="file" required />
+      </div>
+      <button class="btn" type="submit">Upload</button>
+      <a class="btn secondary" href="/ui/images">Cancel</a>
+    </form>
+  </div>
+{% endblock %}

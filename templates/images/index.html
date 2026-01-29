@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="card">
+    <div class="actions" style="justify-content: space-between; margin-bottom: 16px;">
+      <h2>Images</h2>
+      <a class="btn" href="/ui/images/upload">Upload</a>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Version</th>
+          <th>SHA256</th>
+          <th>Status</th>
+          <th>Created</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for image in images %}
+        <tr>
+          <td>{{ image.name }}</td>
+          <td>{{ image.version }}</td>
+          <td>{{ image.sha256[:12] }}...</td>
+          <td>
+            {% if image.approved %}
+              <span class="status-approved">Approved</span>
+            {% else %}
+              <span class="status-pending">Pending</span>
+            {% endif %}
+          </td>
+          <td>{{ image.created_at }}</td>
+          <td class="actions">
+            <a class="btn secondary" href="/ui/images/{{ image.id }}">View</a>
+            <form action="/ui/images/{{ image.id }}/delete" method="post">
+              <button class="btn danger" type="submit">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="6">No images yet.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="card">
+    <div class="actions" style="justify-content: space-between; margin-bottom: 16px;">
+      <h2>Sync Jobs</h2>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Image</th>
+          <th>PC</th>
+          <th>Status</th>
+          <th>Detail</th>
+          <th>Updated</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for job in jobs %}
+        <tr>
+          <td>{{ job.id }}</td>
+          <td>{{ job.image.name if job.image else job.image_id }}</td>
+          <td>{{ job.pc.name if job.pc else job.pc_id }}</td>
+          <td>
+            {% if job.status == "completed" %}
+              <span class="badge success">Completed</span>
+            {% elif job.status == "failed" %}
+              <span class="badge danger">Failed</span>
+            {% else %}
+              <span class="badge neutral">{{ job.status }}</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if job.detail %}
+              {{ job.detail[:120] }}{% if job.detail|length > 120 %}...{% endif %}
+            {% else %}
+              -
+            {% endif %}
+          </td>
+          <td>{{ job.updated_at }}</td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="6">No sync jobs yet.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}
