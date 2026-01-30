@@ -1,6 +1,7 @@
 import hashlib
 import os
 from pathlib import Path
+from typing import Optional, Tuple
 
 import boto3
 
@@ -55,7 +56,15 @@ class StorageClient:
         bucket, key = self.parse_s3_uri(uri)
         response = self.s3.get_object(Bucket=bucket, Key=key)
         filename = os.path.basename(key)
-        return response["Body"], filename
+        return response["Body"], filename, response.get("ContentLength")
+
+    def head_s3_object(self, uri: str) -> Tuple[str, Optional[int]]:
+        if not self.s3:
+            raise ValueError("S3 client not configured.")
+        bucket, key = self.parse_s3_uri(uri)
+        response = self.s3.head_object(Bucket=bucket, Key=key)
+        filename = os.path.basename(key)
+        return filename, response.get("ContentLength")
 
 
 storage_client = StorageClient()

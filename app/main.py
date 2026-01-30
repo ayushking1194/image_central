@@ -106,15 +106,45 @@ def download_image(image_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Image not found.")
 
     if image.storage_uri.startswith("s3://"):
-        body, filename = storage_client.open_s3_stream(image.storage_uri)
+        body, filename, content_length = storage_client.open_s3_stream(
+            image.storage_uri
+        )
         return StreamingResponse(
-            body, media_type="application/octet-stream", headers={
-                "Content-Disposition": f'attachment; filename="{filename}"'
-            }
+            body,
+            media_type="application/octet-stream",
+            headers={
+                "Content-Disposition": f'attachment; filename="{filename}"',
+                "Content-Length": str(content_length) if content_length else None,
+            },
         )
 
     filename = os.path.basename(image.storage_uri)
     return FileResponse(path=image.storage_uri, filename=filename)
+
+
+@app.head("/images/{image_id}/download")
+def download_image_head(image_id: int, db: Session = Depends(get_db)):
+    image = db.query(Image).filter(Image.id == image_id).first()
+    if not image:
+        raise HTTPException(status_code=404, detail="Image not found.")
+
+    if image.storage_uri.startswith("s3://"):
+        filename, content_length = storage_client.head_s3_object(image.storage_uri)
+        headers = {
+            "Content-Disposition": f'attachment; filename="{filename}"',
+        }
+        if content_length is not None:
+            headers["Content-Length"] = str(content_length)
+        return PlainTextResponse("", headers=headers)
+
+    if not os.path.exists(image.storage_uri):
+        raise HTTPException(status_code=404, detail="Image file not found.")
+    filename = os.path.basename(image.storage_uri)
+    headers = {
+        "Content-Disposition": f'attachment; filename="{filename}"',
+        "Content-Length": str(os.path.getsize(image.storage_uri)),
+    }
+    return PlainTextResponse("", headers=headers)
 
 
 @app.get("/reachability")
