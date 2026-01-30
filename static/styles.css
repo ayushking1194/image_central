@@ -172,6 +172,15 @@ tbody tr:hover {
   margin-bottom: 12px;
 }
 
+.form-row {
+  display: flex;
+  gap: 16px;
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
 label {
   display: block;
   margin-bottom: 6px;

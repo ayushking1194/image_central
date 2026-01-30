@@ -34,6 +34,13 @@ if os.path.isdir(ASSET_DIR):
     app.mount("/assets", StaticFiles(directory=ASSET_DIR), name="assets")
 
 
+@app.get("/")
+def home(request: Request):
+    return templates.TemplateResponse(
+        "home.html", {"request": request, "title": "Home"}
+    )
+
+
 @app.post("/pcs", response_model=PrismCentralRead)
 def register_pc(payload: PrismCentralCreate, db: Session = Depends(get_db)):
     pc = PrismCentral(
@@ -165,12 +172,12 @@ def list_sync_jobs(db: Session = Depends(get_db)):
     return db.query(SyncJob).all()
 
 
-@app.get("/ui/sync-jobs")
-def ui_list_sync_jobs(request: Request, db: Session = Depends(get_db)):
+@app.get("/ui/tasks")
+def ui_list_tasks(request: Request, db: Session = Depends(get_db)):
     jobs = db.query(SyncJob).all()
     return templates.TemplateResponse(
-        "sync_jobs/index.html",
-        {"request": request, "title": "Sync Jobs", "jobs": jobs},
+        "tasks/index.html",
+        {"request": request, "title": "Tasks", "jobs": jobs},
     )
 
 
